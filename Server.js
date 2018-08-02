@@ -4,6 +4,7 @@ var path = require('path');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var base64 = require('base-64');
+var fetch = require('node-fetch');
 
 // Express setup
 var app = express();
@@ -26,31 +27,30 @@ let username = process.env.TONE_ANALYZER_USERNAME;
 let password = process.env.TONE_ANALYZER_PASSWORD;
 
 app.post('/checkEmotionsOfChat', function(req, res) {
-  res.send(req.body);
-  // fetch(url + "/v3/tone_chat?version=2018-06-15", {
-  //   method: "POST",
-  //   headers: new Headers({
-  //     "Content-Type": "application/json",
-  //     "Authorization": "Basic " + base64.encode(username + ":" + password)
-  //   }),
-  //   body: JSON.stringify({
-  //     utterances: arr
-  //   })
-  // }).then(res => res.json())
-  // .then((resp) => {
-  //   console.log(resp);
-  //   if (resp.utterances_tone.length > 0) {
-  //     console.log(resp.utterances_tone);
-  //     return resp.utterances_tone;
-  //   } else {
-  //     console.log("No emotion");
-  //     return;
-  //   }
-  // })
-  // .catch((err) => {
-  //   // network error
-  //   console.log('error', err)
-  // })
+  fetch(url + "/v3/tone_chat?version=2018-06-15", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Basic " + base64.encode(username + ":" + password)
+    },
+    body: JSON.stringify({
+      utterances: req.body.utterances
+    })
+  }).then(res => res.json())
+  .then((resp) => {
+    console.log(resp);
+    if (resp.utterances_tone.length > 0) {
+      console.log(resp.utterances_tone);
+      return res.json({tone: resp.utterances_tone});
+    } else {
+      console.log("No emotion");
+      return res.json({tone: 'No emotion'});
+    }
+  })
+  .catch((err) => {
+    // network error
+    console.log('error', err)
+  })
 })
 
 
