@@ -25,7 +25,7 @@ let url = process.env.TONE_ANALYZER_URL;
 let username = process.env.TONE_ANALYZER_USERNAME;
 let password = process.env.TONE_ANALYZER_PASSWORD;
 
-app.post('/checkEmotionsOfChat', function(req, res) {
+app.post('/', function(req, res) {
   res.send(req.body);
   // fetch(url + "/v3/tone_chat?version=2018-06-15", {
   //   method: "POST",
