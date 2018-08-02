@@ -55,7 +55,7 @@ class App extends Component {
   // }
 
   checkEmotionsOfChat(arr) {
-    fetch("http://localhost:1337/", {
+    fetch("http://localhost:1337/checkEmotionsOfChat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -64,16 +64,17 @@ class App extends Component {
         utterances: arr
       })
     })
-    // .then((resp) => {
-    //   console.log(resp);
-    //   if (resp.utterances_tone.length > 0) {
-    //     console.log(resp.utterances_tone);
-    //     return resp.utterances_tone;
-    //   } else {
-    //     console.log("No emotion");
-    //     return;
-    //   }
-    // })
+     .then(res => res.json())
+    .then((resp) => {
+      console.log(resp);
+      if (typeof resp.tone === "object") {
+        console.log(resp.tone);
+        return resp.tone;
+      } else {
+        console.log("No emotion");
+        return;
+      }
+    })
     .catch((err) => {
       // network error
       console.log('error', err)
@@ -86,7 +87,7 @@ class App extends Component {
     } else {
       return <div className="App">
         <h1>Welcome to the game</h1>
-        <button onClick={() => this.checkEmotionsOfChat()}>Start Game</button>
+        <button onClick={() => this.checkEmotionsOfChat([{text: "Hello"}, {text: "Hello"}])}>Start Game</button>
         <button onClick={() => this.endGame()}>End Game</button>
       </div>
     }
