@@ -27,35 +27,39 @@ class App extends Component {
     });
   }
 
-  // checkEmotionsOfEmail(str) {
-  //   fetch("https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2018-06-15", {
-  //     method: "POST",
-  //     headers: new Headers({
-  //       "Content-Type": "application/json",
-  //       "Authorization": "Basic " + base64.encode(username + ":" + password)
-  //     }),
-  //     body: JSON.stringify({
-  //       text: str
-  //     })
-  //   }).then(res => res.json())
-  //   .then((resp) => {
-  //     console.log(resp);
-  //     if (resp.document_tone.tones.length > 0) {
-  //       console.log(resp.document_tone.tones);
-  //       return resp.document_tone.tones;
-  //     } else {
-  //       console.log("No emotion");
-  //       return;
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     // network error
-  //     console.log('error', err)
-  //   })
-  // }
+  async checkEmotionsOfEmail(str) {
+    let result = null;
+    await fetch("http://localhost:1337/checkEmotionsOfEmail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: str
+      })
+    }).then(res => res.json())
+    .then((resp) => {
+      console.log(resp);
+      if (typeof resp.tone === "object") {
+        console.log(resp.tone);
+        result = resp.tone;
+        return;
+      } else {
+        console.log("No emotion");
+        result = resp.tone;
+        return;
+      }
+    })
+    .catch((err) => {
+      // network error
+      console.log('error', err)
+    })
+    return result;
+  }
 
-  checkEmotionsOfChat(arr) {
-    fetch("http://localhost:1337/checkEmotionsOfChat", {
+  async checkEmotionsOfChat(arr) {
+    let result = null;
+    await fetch("http://localhost:1337/checkEmotionsOfChat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -69,26 +73,33 @@ class App extends Component {
       console.log(resp);
       if (typeof resp.tone === "object") {
         console.log(resp.tone);
-        return resp.tone;
+        result = resp.tone;
+        return;
       } else {
         console.log("No emotion");
+        result = resp.tone;
         return;
       }
     })
     .catch((err) => {
       // network error
       console.log('error', err)
-    })
+    });
+    return result;
   }
 
   render() {
     if (this.state.status) {
-      return <Chap0_1 />
+      return <Chap0_1 checkEmotionsOfChat={(i) => this.checkEmotionsOfChat(i)}
+                      checkEmotionsOfEmail={(i) => this.checkEmotionsOfEmail(i)}
+                      status={this.state.status}
+                      start={this.state.start}
+                      endGame={() => this.endGame()}/>
     } else {
       return <div className="App">
-        <h1>Welcome to the game</h1>
-        <button onClick={() => this.checkEmotionsOfChat([{text: "Hello"}, {text: "Hello"}])}>Start Game</button>
-        <button onClick={() => this.endGame()}>End Game</button>
+        <h1>Welcome to LOVE LIFE!</h1>
+        <button className="playButton" onClick={() => this.startGame()}>Start Game</button>
+        <button className="exitButton" onClick={() => this.endGame()}>End Game</button>
       </div>
     }
   }

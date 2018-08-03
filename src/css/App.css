@@ -1,0 +1,13 @@
+.App {
+  background-image: url("https://wallpapershome.com/images/pages/pic_h/17517.jpg");
+}
+
+.playButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1.5;
+  font: 700 1.2rem 'Roboto Slab', sans-serif;
+  padding: 1em 2em;
+  letter-spacing: 0.05rem;
+}
