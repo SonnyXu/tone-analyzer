@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import Chap0_1 from './Chap0/Chap0_1'
-
 import './css/App.css';
-
-
-
 
 class App extends Component {
   constructor(props) {
